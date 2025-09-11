@@ -1,20 +1,24 @@
 
 
-resource "azurerm_resource_group" "main" {
-  name     = "${var.project_name}-rg"
-  location = var.location
+# resource "azurerm_resource_group" "main" {
+#   name     = "${var.project_name}-rg"
+#   location = var.location
+# }
+
+data azurerm_resource_group "main" {
+    name = var.rg_name
 }
 
 resource "azurerm_virtual_network" "databricks" {
   name                = "${var.project_name}-databricks-vnet"
   address_space       = var.vnet_address_space
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = data.azurerm_resource_group.main.location
+  resource_group_name = data.azurerm_resource_group.main.name
 }
 
 resource "azurerm_subnet" "databricks_public" {
   name                 = "${var.project_name}-databricks-public-subnet"
-  resource_group_name  = azurerm_resource_group.main.name
+  resource_group_name  = data.azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.databricks.name
   address_prefixes     = [var.public_subnet_address_prefix]
 
@@ -33,7 +37,7 @@ resource "azurerm_subnet" "databricks_public" {
 
 resource "azurerm_subnet" "databricks_private" {
   name                 = "${var.project_name}-databricks-private-subnet"
-  resource_group_name  = azurerm_resource_group.main.name
+  resource_group_name  = data.azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.databricks.name
   address_prefixes     = [var.private_subnet_address_prefix]
 
@@ -54,21 +58,21 @@ resource "azurerm_subnet" "databricks_private" {
 resource "azurerm_subnet" "databricks_pe" {
   count                = var.pe_subnet_address_prefix == "" ? 0 : 1
   name                 = "${var.project_name}-databricks-pe-subnet"
-  resource_group_name  = azurerm_resource_group.main.name
+  resource_group_name  = data.azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.databricks.name
   address_prefixes     = [var.pe_subnet_address_prefix]
 }
 
 resource "azurerm_network_security_group" "databricks_public" {
   name                = "${var.project_name}-databricks-public-nsg"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = data.azurerm_resource_group.main.location
+  resource_group_name = data.azurerm_resource_group.main.name
 }
 
 resource "azurerm_network_security_group" "databricks_private" {
   name                = "${var.project_name}-databricks-private-nsg"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = data.azurerm_resource_group.main.location
+  resource_group_name = data.azurerm_resource_group.main.name
 }
 
 resource "azurerm_subnet_network_security_group_association" "databricks_public" {
@@ -83,8 +87,8 @@ resource "azurerm_subnet_network_security_group_association" "databricks_private
 
 resource "azurerm_databricks_workspace" "main" {
   name                          = "${var.project_name}-dbw"
-  resource_group_name           = azurerm_resource_group.main.name
-  location                      = azurerm_resource_group.main.location
+  resource_group_name           = data.azurerm_resource_group.main.name
+  location                      = data.azurerm_resource_group.main.location
   sku                           = var.databricks_sku
   managed_resource_group_name   = "${var.project_name}-databricks-managed-rg"
 

@@ -2,6 +2,7 @@
 module "databricks1" {
   source = "./modules/databricks"
 
+  rg_name = data.azurerm_resource_group.rg.name
   # Project naming (use existing var or literal)
   project_name = "${var.project_name_no_dash}dbx1"
 
@@ -22,6 +23,7 @@ module "databricks1" {
 module "databricks2" {
   source = "./modules/databricks"
 
+  rg_name = data.azurerm_resource_group.rg.name
   # Project naming (use existing var or literal)
   project_name = "${var.project_name_no_dash}dbx2"
 

@@ -59,3 +59,7 @@ variable "pe_subnet_address_prefix" {
   type        = string
   default     = ""
 }
+
+variable "rg_name" {
+    type = string
+}
