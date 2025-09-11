@@ -1,0 +1,9 @@
+**/bin
+**/obj
+**/*.exe
+**/*.test
+.git
+.gitignore
+.DS_Store
+node_modules
+npm-debug.log
