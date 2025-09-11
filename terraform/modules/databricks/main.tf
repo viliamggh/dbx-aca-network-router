@@ -108,11 +108,3 @@ resource "azurerm_databricks_workspace" "main" {
     azurerm_subnet_network_security_group_association.databricks_private,
   ]
 }
-
-# Optional: metastore assignment (requires databricks provider configured in root module).
-# Uncomment and provide metastore_id in module call if you want the assignment created inside the module.
-# resource "databricks_metastore_assignment" "wsa1" {
-#   provider = databricks.accounts
-#   workspace_id = azurerm_databricks_workspace.main.workspace_id
-#   metastore_id = var.metastore_id
-# }
