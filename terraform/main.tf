@@ -36,7 +36,7 @@ resource "azurerm_key_vault" "kv" {
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 7
   purge_protection_enabled    = false
-  enable_rbac_authorization   = true
+  rbac_authorization_enabled  = true
 
   sku_name = "standard"
 }
@@ -108,7 +108,7 @@ resource "azurerm_role_assignment" "c_app_storage_access" {
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = azurerm_user_assigned_identity.c_app_identity.principal_id
 
-  depends_on = [azurerm_container_app.aca]
+  # depends_on = [azurerm_container_app.aca]
 }
 
 
