@@ -1,6 +1,5 @@
 
-// Example: call the databricks module with explicit values (edit to fit environment)
-module "databricks" {
+module "databricks1" {
   source = "./modules/databricks"
 
   # Project naming (use existing var or literal)
@@ -20,8 +19,7 @@ module "databricks" {
 }
 
 
-// Example: call the databricks module with explicit values (edit to fit environment)
-module "databricks" {
+module "databricks2" {
   source = "./modules/databricks"
 
   # Project naming (use existing var or literal)
