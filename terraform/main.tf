@@ -82,7 +82,6 @@ resource "azurerm_container_app_environment" "c_app_env" {
   name                = "${var.project_name_no_dash}cae"
   location            = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
-  # log_analytics_workspace_id = azurerm_log_analytics_workspace.example.id
 }
 
 resource "azurerm_user_assigned_identity" "c_app_identity" {
@@ -109,7 +108,7 @@ resource "azurerm_role_assignment" "c_app_storage_access" {
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = azurerm_user_assigned_identity.c_app_identity.principal_id
 
-  depends_on = [azurerm_container_app.bank_pull]
+  depends_on = [azurerm_container_app.aca]
 }
 
 

@@ -29,10 +29,14 @@ jobs:
     environment: main
     name: Image Build
     runs-on: ubuntu-latest
+    outputs:
+      src_hash: ${{ steps.srchash.outputs.src_hash }}
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Login to Azure using Federated Credentials
         uses: azure/login@v2
@@ -54,14 +58,30 @@ jobs:
           username: 00000000-0000-0000-0000-000000000000
           password: ${{ steps.acrtoken.outputs.token }}
 
+      - name: Compute src hash for image tag
+        id: srchash
+        run: |
+          set -e
+          # prefer git tree hash for src/ when available (deterministic per commit)
+          if git rev-parse --verify HEAD:src >/dev/null 2>&1; then
+            HASH=$(git rev-parse --verify HEAD:src)
+          else
+            HASH=$(find src -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')
+          fi
+          SHORT=${HASH:0:12}
+          echo "src_hash=$SHORT" >> "$GITHUB_OUTPUT"
+
       - name: app - build docker image
         working-directory: src
+        env:
+          IMAGE: "${{ vars.ACR_NAME }}.azurecr.io/app:${{ steps.srchash.outputs.src_hash }}"
         run: |
-          docker build  -t ${{ vars.ACR_NAME }}.azurecr.io/app:main .
+          echo "Building $IMAGE"
+          docker build -t "$IMAGE" .
 
       - name: app - push to ACR
         run: |
-          docker push ${{ vars.ACR_NAME }}.azurecr.io/app:main
+          docker push "${{ vars.ACR_NAME }}.azurecr.io/app:${{ steps.srchash.outputs.src_hash }}"
 
   infra-deploy:
     environment: main
@@ -103,15 +123,19 @@ jobs:
         working-directory: terraform
         run: |
             terraform plan \
-            -var 'acr_name=${{ vars.ACR_NAME }}' \
-            -var 'rg_name=${{ vars.RG_NAME }}' \
-            -var 'project_name_no_dash=${{ vars.PROJECT_NAME_NODASH }}'
+            -var "acr_name=${{ vars.ACR_NAME }}" \
+            -var "rg_name=${{ vars.RG_NAME }}" \
+            -var "project_name_no_dash=${{ vars.PROJECT_NAME_NODASH }}" \
+            -var "image_name=app" \
+            -var "image_tag=${{ needs.build-image.outputs.src_hash }}"
 
         # Terraform Apply
       - name: Terraform Apply
         working-directory: terraform
         run: |
             terraform apply -auto-approve \
-            -var 'acr_name=${{ vars.ACR_NAME }}' \
-            -var 'rg_name=${{ vars.RG_NAME }}' \
-            -var 'project_name_no_dash=${{ vars.PROJECT_NAME_NODASH }}'
+            -var "acr_name=${{ vars.ACR_NAME }}" \
+            -var "rg_name=${{ vars.RG_NAME }}" \
+            -var "project_name_no_dash=${{ vars.PROJECT_NAME_NODASH }}" \
+            -var "image_name=app" \
+            -var "image_tag=${{ needs.build-image.outputs.src_hash }}"

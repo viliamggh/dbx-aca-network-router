@@ -14,7 +14,11 @@ variable "image_name" {
   type    = string
 }
 
-variable "environment" {
-  type    = string
-  default = "main"
+# variable "environment" {
+#   type    = string
+#   default = "main"
+# }
+
+variable "image_tag" {
+  type = string
 }
