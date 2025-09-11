@@ -103,8 +103,8 @@ resource "azurerm_databricks_workspace" "main" {
 
     no_public_ip = var.no_public_ip
 
-    storage_account_name     = var.storage_account_name
-    storage_account_sku_name = var.storage_account_sku_name
+    # storage_account_name     = var.storage_account_name
+    # storage_account_sku_name = var.storage_account_sku_name
   }
 
   depends_on = [
