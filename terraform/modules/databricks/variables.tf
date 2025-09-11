@@ -1,26 +1,10 @@
-variable "acr_name" {
+variable "project_name" {
   type = string
 }
 
-variable "rg_name" {
-  type = string
-}
-
-variable "project_name_no_dash" {
-  type = string
-}
-
-variable "image_name" {
+variable "rg_suffix" {
   type    = string
-}
-
-# variable "environment" {
-#   type    = string
-#   default = "main"
-# }
-
-variable "image_tag" {
-  type = string
+  default = "1"
 }
 
 variable "location" {
@@ -62,4 +46,16 @@ variable "storage_account_name" {
 variable "storage_account_sku_name" {
   type    = string
   default = "Standard_LRS"
+}
+
+# Optional metastore id if you want the module to create assignment
+variable "metastore_id" {
+  type    = string
+  default = ""
+}
+
+variable "pe_subnet_address_prefix" {
+  description = "Optional private endpoint (PE) subnet prefix (CIDR). If provided, a /27 PE subnet will be created in the VNet."
+  type        = string
+  default     = ""
 }
