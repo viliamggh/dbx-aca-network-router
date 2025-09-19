@@ -107,3 +107,4 @@ resource "azurerm_role_assignment" "c_app_storage_access" {
 
 
 
+
