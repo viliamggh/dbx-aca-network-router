@@ -47,11 +47,11 @@ resource "azurerm_key_vault" "kv" {
   sku_name = "standard"
 }
 
-# resource "azurerm_role_assignment" "kv_rbac_vg" {
-#   scope                = azurerm_key_vault.kv.id
-#   role_definition_name = "Key Vault Secrets Officer"
-#   principal_id         = "032fd23a-f163-4727-ba07-4260f5daa653"
-# }
+resource "azurerm_role_assignment" "kv_rbac_current_user" {
+  scope                = azurerm_key_vault.kv.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
 
 resource "azurerm_storage_account" "sa" {
   name                            = "${var.project_name_no_dash}sa"

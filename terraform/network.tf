@@ -49,6 +49,5 @@ resource "azurerm_private_dns_zone_virtual_network_link" "sql_dns_link" {
   private_dns_zone_name = azurerm_private_dns_zone.sql_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.main.id
   registration_enabled  = false
-
-  
+ 
 }

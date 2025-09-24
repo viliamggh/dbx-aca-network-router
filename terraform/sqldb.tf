@@ -11,7 +11,8 @@ resource "azurerm_key_vault_secret" "sql_admin_password" {
   key_vault_id = azurerm_key_vault.kv.id
 
   depends_on = [
-    azurerm_key_vault.kv
+    azurerm_key_vault.kv,
+    azurerm_role_assignment.kv_rbac_current_user
   ]
 }
 
@@ -19,7 +20,7 @@ resource "azurerm_key_vault_secret" "sql_admin_password" {
 resource "azurerm_mssql_server" "sql_server_1" {
   name                          = "${var.project_name_no_dash}-sql1"
   resource_group_name           = data.azurerm_resource_group.rg.name
-  location                      = data.azurerm_resource_group.rg.location
+  location                      = "northeurope"
   version                       = "12.0"
   administrator_login           = var.sql_admin_username
   administrator_login_password  = random_password.sql_password.result
@@ -45,7 +46,7 @@ resource "azurerm_mssql_database" "database_1" {
 resource "azurerm_mssql_server" "sql_server_2" {
   name                          = "${var.project_name_no_dash}-sql2"
   resource_group_name           = data.azurerm_resource_group.rg.name
-  location                      = data.azurerm_resource_group.rg.location
+  location                      = "northeurope"
   version                       = "12.0"
   administrator_login           = var.sql_admin_username
   administrator_login_password  = random_password.sql_password.result
