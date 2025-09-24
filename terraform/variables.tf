@@ -30,9 +30,9 @@ variable "vnet_cidr" {
 }
 
 variable "container_app_subnet_cidr" {
-  description = "Container App subnet CIDR (must be /28)"
+  description = "Container App subnet CIDR (must be /27)"
   type        = string
-  default     = "10.0.1.0/28"
+  default     = "10.0.1.0/27"
 }
 
 variable "private_endpoint_subnet_cidr" {

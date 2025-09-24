@@ -8,7 +8,7 @@ resource "azurerm_virtual_network" "main" {
   
 }
 
-# Container App subnet (delegated, /28 size)
+# Container App subnet (delegated, /27 size)
 resource "azurerm_subnet" "container_app_subnet" {
   name                 = "container-app-subnet"
   resource_group_name  = data.azurerm_resource_group.rg.name
