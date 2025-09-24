@@ -5,8 +5,8 @@
 #   location = var.location
 # }
 
-data azurerm_resource_group "main" {
-    name = var.rg_name
+data "azurerm_resource_group" "main" {
+  name = var.rg_name
 }
 
 resource "azurerm_virtual_network" "databricks" {
@@ -25,7 +25,7 @@ resource "azurerm_subnet" "databricks_public" {
   delegation {
     name = "databricks-delegation"
     service_delegation {
-      name    = "Microsoft.Databricks/workspaces"
+      name = "Microsoft.Databricks/workspaces"
       actions = [
         "Microsoft.Network/virtualNetworks/subnets/join/action",
         "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action",
@@ -44,7 +44,7 @@ resource "azurerm_subnet" "databricks_private" {
   delegation {
     name = "databricks-delegation"
     service_delegation {
-      name    = "Microsoft.Databricks/workspaces"
+      name = "Microsoft.Databricks/workspaces"
       actions = [
         "Microsoft.Network/virtualNetworks/subnets/join/action",
         "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action",
@@ -86,11 +86,11 @@ resource "azurerm_subnet_network_security_group_association" "databricks_private
 }
 
 resource "azurerm_databricks_workspace" "main" {
-  name                          = "${var.project_name}-dbw"
-  resource_group_name           = data.azurerm_resource_group.main.name
-  location                      = data.azurerm_resource_group.main.location
-  sku                           = var.databricks_sku
-  managed_resource_group_name   = "${var.project_name}-databricks-managed-rg"
+  name                        = "${var.project_name}-dbw"
+  resource_group_name         = data.azurerm_resource_group.main.name
+  location                    = data.azurerm_resource_group.main.location
+  sku                         = var.databricks_sku
+  managed_resource_group_name = "${var.project_name}-databricks-managed-rg"
 
   public_network_access_enabled = var.public_network_access_enabled
 

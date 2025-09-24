@@ -61,5 +61,5 @@ variable "pe_subnet_address_prefix" {
 }
 
 variable "rg_name" {
-    type = string
+  type = string
 }

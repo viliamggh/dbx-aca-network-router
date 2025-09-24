@@ -12,7 +12,7 @@ module "databricks1" {
   public_subnet_address_prefix  = "10.2.3.0/24"
   private_subnet_address_prefix = "10.2.4.0/24"
   # PE subnet must not overlap public/private subnets. Use a separate /27 outside those ranges.
-  pe_subnet_address_prefix     = "10.2.5.0/27"
+  pe_subnet_address_prefix = "10.2.5.0/27"
 
   # Databricks SKU and networking behavior
   databricks_sku                = "premium"
@@ -34,7 +34,7 @@ module "databricks2" {
   public_subnet_address_prefix  = "10.2.1.0/24"
   private_subnet_address_prefix = "10.2.2.0/24"
   # PE subnet must not overlap public/private subnets. Use a separate /27 outside those ranges.
-  pe_subnet_address_prefix     = "10.2.6.0/27"
+  pe_subnet_address_prefix = "10.2.6.0/27"
 
   # Databricks SKU and networking behavior
   databricks_sku                = "premium"
