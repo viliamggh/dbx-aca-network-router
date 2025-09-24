@@ -16,19 +16,19 @@ resource "azurerm_key_vault_secret" "sql_admin_password" {
   ]
 }
 
-# # First SQL Server
-# resource "azurerm_mssql_server" "sql_server_1" {
-#   name                          = "${var.project_name_no_dash}-sql1"
-#   resource_group_name           = data.azurerm_resource_group.rg.name
-#   location                      = data.azurerm_resource_group.rg.location
-#   version                       = "12.0"
-#   administrator_login           = var.sql_admin_username
-#   administrator_login_password  = random_password.sql_password.result
-#   minimum_tls_version           = "1.2"
-#   public_network_access_enabled = false
+# First SQL Server
+resource "azurerm_mssql_server" "sql_server_1" {
+  name                          = "${var.project_name_no_dash}-sql1"
+  resource_group_name           = data.azurerm_resource_group.rg.name
+  location                      = data.azurerm_resource_group.rg.location
+  version                       = "12.0"
+  administrator_login           = var.sql_admin_username
+  administrator_login_password  = random_password.sql_password.result
+  minimum_tls_version           = "1.2"
+  public_network_access_enabled = false
 
   
-# }
+}
 
 # # First Database
 # resource "azurerm_mssql_database" "database_1" {
