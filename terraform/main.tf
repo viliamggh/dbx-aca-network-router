@@ -92,7 +92,7 @@ resource "azurerm_container_app_environment" "c_app_env" {
   internal_load_balancer_enabled = true  # Optional: for internal-only access
   
   workload_profile {
-    name                 = "test-workload-profile"
+    name                 = "testwprofile"
     workload_profile_type = "D4"
     minimum_count        = 1
     maximum_count        = 3
