@@ -1,8 +1,8 @@
 #!/bin/bash
-"""
-Network connectivity test script for Container Apps
-Tests basic network connectivity and DNS resolution
-"""
+#
+# Network connectivity test script for Container Apps
+# Tests basic network connectivity and DNS resolution
+#
 
 set -e
 
