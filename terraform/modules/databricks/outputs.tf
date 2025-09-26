@@ -21,3 +21,7 @@ output "workspace_name" {
 output "pe_subnet_id" {
   value = length(azurerm_subnet.databricks_pe) > 0 ? azurerm_subnet.databricks_pe[0].id : ""
 }
+
+output "vnet_name" {
+  value = azurerm_virtual_network.databricks.name
+}

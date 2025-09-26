@@ -58,11 +58,20 @@ resource "azurerm_private_dns_zone" "aca_dns_zone" {
   resource_group_name = data.azurerm_resource_group.rg.name
 }
 
-# Link Container App DNS zone to VNet
-resource "azurerm_private_dns_zone_virtual_network_link" "aca_dns_link" {
-  name                  = "${var.project_name_no_dash}-aca-dns-link"
+# Link Container App DNS zone to main VNet
+resource "azurerm_private_dns_zone_virtual_network_link" "aca_dns_link_main" {
+  name                  = "${var.project_name_no_dash}-aca-dns-link-main"
   resource_group_name   = data.azurerm_resource_group.rg.name
   private_dns_zone_name = azurerm_private_dns_zone.aca_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.main.id
+  registration_enabled  = false
+}
+
+# Link Container App DNS zone to Databricks VNet
+resource "azurerm_private_dns_zone_virtual_network_link" "aca_dns_link_databricks" {
+  name                  = "${var.project_name_no_dash}-aca-dns-link-databricks"
+  resource_group_name   = data.azurerm_resource_group.rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.aca_dns_zone.name
+  virtual_network_id    = module.databricks1.vnet_id
   registration_enabled  = false
 }

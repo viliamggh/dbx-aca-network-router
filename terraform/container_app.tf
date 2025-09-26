@@ -102,9 +102,3 @@ resource "azurerm_private_endpoint" "aca_pe_1" {
 
   
 }
-
-
-import { 
-  to = azurerm_container_app.aca
-  id = "/subscriptions/59ded65e-7c57-44bb-b9b1-83d8b7fa1c32/resourceGroups/dbx-aca-network-router-rg/providers/Microsoft.App/containerApps/dbxacanetworkrouteraca"
-}
