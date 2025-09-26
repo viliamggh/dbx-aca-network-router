@@ -1,0 +1,44 @@
+static_resources:
+  listeners:
+  - name: mssql_listener
+    address: { socket_address: { address: 0.0.0.0, port_value: 1433 } }
+    listener_filters:
+    - name: envoy.filters.listener.tls_inspector
+    filter_chains:
+    - filter_chain_match:
+        server_names: ["dbxacanetworkrouter-sql1-ne.database.windows.net"]
+      filters:
+      - name: envoy.filters.network.tcp_proxy
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+          stat_prefix: to_sql1
+          cluster: sql1
+    - filter_chain_match:
+        server_names: ["dbxacanetworkrouter-sql2-ne.database.windows.net"]
+      filters:
+      - name: envoy.filters.network.tcp_proxy
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+          stat_prefix: to_sql2
+          cluster: sql2
+    # (optional) fallback chain → sql1 if no SNI match
+
+  clusters:
+  - name: sql1
+    type: LOGICAL_DNS
+    connect_timeout: 5s
+    load_assignment:
+      cluster_name: sql1
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address: { socket_address: { address: dbxacanetworkrouter-sql1-ne.database.windows.net, port_value: 1433 } }
+  - name: sql2
+    type: LOGICAL_DNS
+    connect_timeout: 5s
+    load_assignment:
+      cluster_name: sql2
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address: { socket_address: { address: <second-sql-server>.database.windows.net, port_value: 1433 } }
