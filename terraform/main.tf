@@ -53,11 +53,18 @@ resource "azurerm_role_assignment" "kv_rbac_current_user" {
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
-# Grant Container App managed identity access to Key Vault
-resource "azurerm_role_assignment" "kv_rbac_container_app" {
+# Grant Container App user-assigned managed identity access to Key Vault
+resource "azurerm_role_assignment" "kv_rbac_container_app_user" {
   scope                = azurerm_key_vault.kv.id
   role_definition_name = "Key Vault Secrets Officer"
   principal_id         = azurerm_user_assigned_identity.c_app_identity.principal_id
+}
+
+# Grant Container App system-assigned managed identity access to Key Vault
+resource "azurerm_role_assignment" "kv_rbac_container_app_system" {
+  scope                = azurerm_key_vault.kv.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = azurerm_container_app.aca.identity[0].principal_id
 }
 
 resource "azurerm_storage_account" "sa" {

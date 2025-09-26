@@ -5,12 +5,9 @@ resource "azurerm_container_app" "aca" {
   revision_mode                = "Single"
 
   identity {
-    type         = "UserAssigned"
+    type         = "SystemAssigned, UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.c_app_identity.id]
   }
-  # identity {
-  #   type = "SystemAssigned"
-  # }
 
   ingress {
     external_enabled           = true
