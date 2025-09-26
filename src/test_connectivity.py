@@ -18,11 +18,16 @@ def get_key_vault_secret(secret_name, key_vault_name):
         # Get access token using managed identity
         identity_endpoint = os.environ.get('IDENTITY_ENDPOINT')
         identity_header = os.environ.get('IDENTITY_HEADER')
+        client_id = os.environ.get('AZURE_CLIENT_ID')
         
         if not identity_endpoint or not identity_header:
             return None, "Managed identity endpoint not available"
         
+        # Build token URL with client_id for User-Assigned Managed Identity
         token_url = f"{identity_endpoint}?resource=https://vault.azure.net/&api-version=2019-08-01"
+        if client_id:
+            token_url += f"&client_id={client_id}"
+        
         headers = {'X-IDENTITY-HEADER': identity_header}
         
         token_response = requests.get(token_url, headers=headers)
