@@ -1,11 +1,13 @@
-# Nginx based image with SQL Server connectivity testing capabilities
-FROM --platform=linux/amd64 nginx:stable-alpine
+# Lightweight Alpine Linux image for API-only connectivity testing
+FROM --platform=linux/amd64 alpine:3.18
 
-# Install system packages and build dependencies
+# Install system packages and build dependencies for Python and SQL connectivity
 RUN apk add --no-cache \
     curl \
     bind-tools \
     netcat-openbsd \
+    traceroute \
+    iputils \
     python3 \
     py3-pip \
     bash \
@@ -15,12 +17,13 @@ RUN apk add --no-cache \
     musl-dev \
     python3-dev \
     unixodbc-dev \
-    unixodbc
+    unixodbc \
+    ca-certificates
 
 # Create and activate virtual environment, then install Python packages
 RUN python3 -m venv /opt/venv \
     && /opt/venv/bin/pip install --upgrade pip \
-    && /opt/venv/bin/pip install pyodbc requests flask werkzeug
+    && /opt/venv/bin/pip install pyodbc requests flask
 
 # Add venv to PATH
 ENV PATH="/opt/venv/bin:$PATH"
@@ -30,24 +33,33 @@ RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac
     && apk add --allow-untrusted msodbcsql17_17.10.1.1-1_amd64.apk \
     && rm msodbcsql17_17.10.1.1-1_amd64.apk
 
-# Remove default configuration and add our custom one (listens on 8080)
-COPY nginx.conf /etc/nginx/nginx.conf
+# Create app directory
+WORKDIR /app
 
-# Copy static site into nginx html root
-COPY www /usr/share/nginx/html
-
-# Copy testing scripts and startup script
-COPY test_connectivity.py /usr/local/bin/
-COPY test_endpoints.sh /usr/local/bin/
-COPY test_api_server.py /usr/local/bin/
-COPY startup.sh /usr/local/bin/
+# Copy application files
+COPY test_connectivity.py /app/
+COPY test_endpoints.sh /app/
+COPY test_api_server.py /app/
+COPY startup.sh /app/
 
 # Make scripts executable
-RUN chmod +x /usr/local/bin/test_connectivity.py /usr/local/bin/test_endpoints.sh /usr/local/bin/test_api_server.py /usr/local/bin/startup.sh
+RUN chmod +x /app/test_connectivity.py /app/test_endpoints.sh /app/test_api_server.py /app/startup.sh
 
-# Expose the port expected by the Terraform container app (target_port = 8080)
-EXPOSE 8080
+# Create non-root user for security
+RUN addgroup -g 1001 -S appuser && \
+    adduser -S -D -H -u 1001 -h /app -s /sbin/nologin -G appuser appuser && \
+    chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Expose port 5000 for the API (will be mapped to 8080 by Container Apps)
+EXPOSE 5000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:5000/health || exit 1
 
 STOPSIGNAL SIGTERM
 
-CMD ["/usr/local/bin/startup.sh"]
+CMD ["/app/startup.sh"]

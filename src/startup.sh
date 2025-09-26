@@ -1,29 +1,40 @@
 #!/bin/bash
-"""
-Startup script for Container App
-Starts both Nginx and the test API server
-"""
+
+echo "Starting DBX ACA Network Router API..."
 
 set -e
 
-echo "Starting Container App with connectivity testing..."
+# Make sure scripts are executable
+chmod +x /app/test_endpoints.sh
+chmod +x /app/test_connectivity.py
 
-# Start the API server in background
-echo "Starting test API server..."
-/opt/venv/bin/python /usr/local/bin/test_api_server.py &
-API_PID=$!
+# Show environment info
+echo "Container Info:"
+echo "  Hostname: $(hostname)"
+echo "  Container IP: $(hostname -I | xargs || echo 'unknown')"
+echo "  Python version: $(/opt/venv/bin/python --version)"
 
-# Wait a moment for API server to start
-sleep 2
+# Check if critical environment variables are set
+echo "Environment Check:"
+echo "  AZURE_CLIENT_ID: ${AZURE_CLIENT_ID:+set}"
+echo "  SQL_SERVER_1_HOSTNAME: ${SQL_SERVER_1_HOSTNAME:+set}"
+echo "  KEY_VAULT_NAME: ${KEY_VAULT_NAME:+set}"
 
-# Check if API server is running
-if kill -0 $API_PID 2>/dev/null; then
-    echo "✅ API server started successfully (PID: $API_PID)"
-else
-    echo "❌ Failed to start API server"
-    exit 1
-fi
+# Start the API server (this will run in foreground)
+echo "Starting API server on port 5000..."
+echo "API will be available at:"
+echo "  Internal: http://localhost:5000"
+echo "  External: http://<container-app-fqdn>:5000"
+echo ""
+echo "Available endpoints:"
+echo "  GET  /"
+echo "  GET  /health"
+echo "  GET  /status"
+echo "  GET  /tests/all"
+echo "  GET  /tests/network"
+echo "  GET  /tests/sql"
+echo "  POST /tests/custom"
+echo "  GET  /info/environment"
+echo ""
 
-# Start nginx in foreground
-echo "Starting nginx..."
-exec nginx -g "daemon off;"
+exec /opt/venv/bin/python /app/test_api_server.py

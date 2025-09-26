@@ -16,7 +16,7 @@ resource "azurerm_container_app" "aca" {
       latest_revision = true
       percentage      = 100
     }
-    target_port = 8080
+    target_port = 5000
     # ip_security_restriction {
     #   name             = "my_machine"
     #   action           = "Allow"
