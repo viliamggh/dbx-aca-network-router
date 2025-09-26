@@ -11,7 +11,7 @@ resource "azurerm_container_app" "aca" {
 
   ingress {
     external_enabled           = true
-    allow_insecure_connections = true
+    # allow_insecure_connections = true
     transport                  = "tcp"
     target_port                = 1433
     exposed_port               = 1433
