@@ -12,16 +12,14 @@ resource "azurerm_container_app" "aca" {
   ingress {
     external_enabled           = true
     allow_insecure_connections = true
+    transport                  = "tcp"
+    target_port                = 1433
+    exposed_port               = 1433
+    
     traffic_weight {
       latest_revision = true
       percentage      = 100
     }
-    target_port = 5000
-    # ip_security_restriction {
-    #   name             = "my_machine"
-    #   action           = "Allow"
-    #   ip_address_range = "109.81.89.47"
-    # }
   }
   registry {
     server   = data.azurerm_container_registry.acr.login_server
