@@ -91,7 +91,7 @@ resource "azurerm_private_endpoint" "aca_pe_1" {
   private_service_connection {
     name                           = "${var.project_name_no_dash}-aca-psc"
     private_connection_resource_id = azurerm_container_app_environment.c_app_env.id
-    subresource_names              = ["managedEnvironment"]
+    subresource_names              = ["managedEnvironments"]
     is_manual_connection           = false
   }
 
