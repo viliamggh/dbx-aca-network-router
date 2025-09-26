@@ -120,6 +120,13 @@ resource "azurerm_role_assignment" "c_app_storage_access" {
   # depends_on = [azurerm_container_app.aca]
 }
 
+# Key Vault access for Container App identity
+resource "azurerm_role_assignment" "c_app_kv_access" {
+  scope                = azurerm_key_vault.kv.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_user_assigned_identity.c_app_identity.principal_id
+}
+
 
 
 
