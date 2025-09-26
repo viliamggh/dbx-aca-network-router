@@ -140,7 +140,3 @@ resource "azurerm_role_assignment" "c_app_kv_access" {
   role_definition_name = "Key Vault Secrets User"
   principal_id         = azurerm_user_assigned_identity.c_app_identity.principal_id
 }
-
-
-
-
