@@ -1,7 +1,7 @@
 # Nginx based image with SQL Server connectivity testing capabilities
-FROM nginx:stable-alpine
+FROM --platform=linux/amd64 nginx:stable-alpine
 
-# Install SQL Server tools and utilities for connectivity testing
+# Install system packages and build dependencies
 RUN apk add --no-cache \
     curl \
     bind-tools \
@@ -10,9 +10,22 @@ RUN apk add --no-cache \
     py3-pip \
     bash \
     jq \
-    && pip3 install pyodbc requests flask werkzeug
+    g++ \
+    gcc \
+    musl-dev \
+    python3-dev \
+    unixodbc-dev \
+    unixodbc
 
-# Install Microsoft ODBC Driver for SQL Server
+# Create and activate virtual environment, then install Python packages
+RUN python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --upgrade pip \
+    && /opt/venv/bin/pip install pyodbc requests flask werkzeug
+
+# Add venv to PATH
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install Microsoft ODBC Driver for SQL Server (AMD64 version)
 RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.10.1.1-1_amd64.apk \
     && apk add --allow-untrusted msodbcsql17_17.10.1.1-1_amd64.apk \
     && rm msodbcsql17_17.10.1.1-1_amd64.apk

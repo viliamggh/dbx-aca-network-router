@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/opt/venv/bin/python
 """
 Simple test API server for Container App connectivity testing
 Provides REST endpoints to execute network and SQL connectivity tests
@@ -47,7 +47,7 @@ def test_sql():
     """Run SQL connectivity tests"""
     try:
         result = subprocess.run(
-            ['/usr/bin/python3', '/usr/local/bin/test_connectivity.py'],
+            ['/opt/venv/bin/python', '/usr/local/bin/test_connectivity.py'],
             capture_output=True,
             text=True,
             timeout=60

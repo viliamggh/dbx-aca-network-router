@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/opt/venv/bin/python
 """
 SQL Server connectivity test script for Container Apps
 Tests DNS resolution, network connectivity, and database authentication

@@ -10,7 +10,7 @@ echo "Starting Container App with connectivity testing..."
 
 # Start the API server in background
 echo "Starting test API server..."
-/usr/bin/python3 /usr/local/bin/test_api_server.py &
+/opt/venv/bin/python /usr/local/bin/test_api_server.py &
 API_PID=$!
 
 # Wait a moment for API server to start
