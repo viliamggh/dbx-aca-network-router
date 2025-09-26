@@ -89,14 +89,15 @@ resource "azurerm_private_endpoint" "aca_pe_1" {
   subnet_id           = module.databricks1.pe_subnet_id
 
   private_service_connection {
-    name                           = "${var.project_name_no_dash}-sql1-psc"
-    private_connection_resource_id = azurerm_container_app.aca.id
+    name                           = "${var.project_name_no_dash}-aca-psc"
+    private_connection_resource_id = azurerm_container_app_environment.c_app_env.id
+    subresource_names              = ["managedEnvironment"]
     is_manual_connection           = false
   }
 
   private_dns_zone_group {
-    name                 = "${var.project_name_no_dash}-sql1-dns-zone-group"
-    private_dns_zone_ids = [azurerm_private_dns_zone.sql_dns_zone.id]
+    name                 = "${var.project_name_no_dash}-aca-dns-zone-group"
+    private_dns_zone_ids = [azurerm_private_dns_zone.aca_dns_zone.id]
   }
 
   
