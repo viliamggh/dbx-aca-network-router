@@ -103,7 +103,7 @@ resource "azurerm_container_app_environment" "c_app_env" {
   location                   = data.azurerm_resource_group.rg.location
   resource_group_name        = data.azurerm_resource_group.rg.name
   infrastructure_subnet_id   = azurerm_subnet.container_app_subnet.id
-  internal_load_balancer_enabled = false  # Set to false for external access
+  internal_load_balancer_enabled = true  # Set to false for external access
   
   workload_profile {
     name                 = "testwprofile"
