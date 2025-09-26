@@ -19,7 +19,7 @@ Outputs
 - resource_group_name
 - vnet_id
 - workspace_id
-- workspace_workspace_id
+- workspace_id
 
 Example usage
 

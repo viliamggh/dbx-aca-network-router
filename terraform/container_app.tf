@@ -79,3 +79,25 @@ resource "azurerm_container_app" "aca" {
   }
 
 }
+
+
+# Private Endpoint for ACA
+resource "azurerm_private_endpoint" "aca_pe_1" {
+  name                = "${var.project_name_no_dash}-aca-pe1"
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  subnet_id           = module.databricks1.pe_subnet_id
+
+  private_service_connection {
+    name                           = "${var.project_name_no_dash}-sql1-psc"
+    private_connection_resource_id = azurerm_container_app.aca.id
+    is_manual_connection           = false
+  }
+
+  private_dns_zone_group {
+    name                 = "${var.project_name_no_dash}-sql1-dns-zone-group"
+    private_dns_zone_ids = [azurerm_private_dns_zone.sql_dns_zone.id]
+  }
+
+  
+}

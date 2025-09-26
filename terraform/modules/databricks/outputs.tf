@@ -10,8 +10,12 @@ output "workspace_id" {
   value = azurerm_databricks_workspace.main.id
 }
 
-output "workspace_workspace_id" {
+output "workspace_id" {
   value = azurerm_databricks_workspace.main.workspace_id
+}
+
+output "workspace_name" {
+  value = azurerm_databricks_workspace.main.name
 }
 
 output "pe_subnet_id" {
