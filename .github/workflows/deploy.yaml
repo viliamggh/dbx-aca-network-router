@@ -177,7 +177,7 @@ jobs:
           cat > app.yaml <<'YAML'
           type: Microsoft.App/containerApps
           name: __ACA_NAME__
-          location: __REGION__
+          location: __ACA_REGION__
           properties:
             environmentId: __ACA_ENV_ID__
             configuration:
@@ -198,7 +198,7 @@ jobs:
               revisionSuffix: v1
               containers:
                 - name: nginx
-                  image: __ACR__.azurecr.io/app:__IMAGE_TAG__
+                  image: __ACR__.azurecr.io/app:${{ steps.srchash.outputs.src_hash }}
                   resources:
                     cpu: 0.25
                     memory: 0.5Gi
@@ -206,9 +206,9 @@ jobs:
 
           # Substitute placeholders
           sed -i "s|__ACA_NAME__|$ACA_NAME|g" app.yaml
-          sed -i "s|__REGION__|$REGION|g" app.yaml
-          sed -i "s|__ACA_ENV_ID__|$__ACA_ENV_ID__|g" app.yaml
-          sed -i "s|__ACR__|$ACR|g" app.yaml
+          sed -i "s|__ACA_REGION__|$ACA_REGION|g" app.yaml
+          sed -i "s|__ACA_ENV_ID__|$ACA_ENV_ID|g" app.yaml
+          sed -i "s|__ACR_NAME__|$ACR_NAME|g" app.yaml
           sed -i "s|__IMAGE_TAG__|$IMAGE_TAG|g" app.yaml
 
           echo "===== Rendered app.yaml ====="
