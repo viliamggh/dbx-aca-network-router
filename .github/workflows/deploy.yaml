@@ -161,13 +161,8 @@ jobs:
           echo ${{ env.ACA_NAME }}
       
       - name: Update Container App (add extra TCP ports + new image)
-        # env:
-        #   RG: ${{ vars.RG_NAME }}
-        #   ACA_NAME: ${{ vars.ACA_NAME }}
-        #   ACA_ENV_NAME: ${{ vars.ACA_ENV_NAME }}
-        #   ACR: ${{ vars.ACR_NAME }}
-        #   IMAGE_TAG: ${{ needs.build-image.outputs.src_hash }}
-        #   REGION: ${{ vars.REGION }}
+        env:
+          IMAGE_TAG: ${{ needs.build-image.outputs.src_hash }}
         run: |
           set -e
 
@@ -196,7 +191,7 @@ jobs:
               revisionSuffix: v1
               containers:
                 - name: nginx
-                  image: __ACR_NAME__.azurecr.io/app:${{ steps.srchash.outputs.src_hash }}
+                  image: __ACR_NAME__.azurecr.io/app:__IMAGE_TAG__
                   resources:
                     cpu: 0.25
                     memory: 0.5Gi
