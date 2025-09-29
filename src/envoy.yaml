@@ -42,3 +42,5 @@ static_resources:
       - lb_endpoints:
         - endpoint:
             address: { socket_address: { address: <second-sql-server>.database.windows.net, port_value: 1433 } }
+
+
