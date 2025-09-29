@@ -153,8 +153,8 @@ jobs:
         working-directory: terraform
         run: |
           echo "ACA_NAME=$(terraform output -raw container_app_name)" >> $GITHUB_ENV
-          echo "ACA_ENV_ID=$(terraform output -raw container_app_region)" >> $GITHUB_ENV
-          echo "ACA_REGION=$(terraform output -raw container_app_environment_id)" >> $GITHUB_ENV
+          echo "ACA_REGION=$(terraform output -raw container_app_region)" >> $GITHUB_ENV
+          echo "ACA_ENV_ID=$(terraform output -raw container_app_environment_id)" >> $GITHUB_ENV
           echo "ACR_NAME=$(terraform output -raw container_registry_name)" >> $GITHUB_ENV
 
       - run:
@@ -191,14 +191,12 @@ jobs:
                     exposedPort: 5434
                     external: false
               registries:
-                - server: __ACR__.azurecr.io
-              # NOTE: If you use user-assigned identity for ACR pull, add:
-              #   identity: __UAMI_RESOURCE_ID__
+                - server: __ACR_NAME__.azurecr.io
             template:
               revisionSuffix: v1
               containers:
                 - name: nginx
-                  image: __ACR__.azurecr.io/app:${{ steps.srchash.outputs.src_hash }}
+                  image: __ACR_NAME__.azurecr.io/app:${{ steps.srchash.outputs.src_hash }}
                   resources:
                     cpu: 0.25
                     memory: 0.5Gi
