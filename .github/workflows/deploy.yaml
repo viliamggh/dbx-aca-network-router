@@ -186,7 +186,6 @@ jobs:
                     exposedPort: 5434
                     external: false
             template:
-              revisionSuffix: v1
               containers:
                 - name: nginx
                   image: __ACR_NAME__.azurecr.io/app:__IMAGE_TAG__
