@@ -43,32 +43,32 @@ module "databricks2" {
 }
 
 
-resource "azurerm_private_dns_zone" "dbx_override" {
-  name                = "database.windows.net"
-  resource_group_name = data.azurerm_resource_group.rg.name
-}
+# resource "azurerm_private_dns_zone" "dbx_override" {
+#   name                = "database.windows.net"
+#   resource_group_name = data.azurerm_resource_group.rg.name
+# }
 
-resource "azurerm_private_dns_a_record" "sql1_to_aca" {
-  name                = azurerm_mssql_server.sql_server_1.name                # "dbxacanetworkrouter-sql1-ne"
-  zone_name           = azurerm_private_dns_zone.dbx_override.name
-  resource_group_name = data.azurerm_resource_group.rg.name
-  ttl                 = 30
-  records             = ["10.2.5.4"]                   # <- ACA private IP
-}
+# resource "azurerm_private_dns_a_record" "sql1_to_aca" {
+#   name                = azurerm_mssql_server.sql_server_1.name                # "dbxacanetworkrouter-sql1-ne"
+#   zone_name           = azurerm_private_dns_zone.dbx_override.name
+#   resource_group_name = data.azurerm_resource_group.rg.name
+#   ttl                 = 30
+#   records             = ["10.2.5.4"]                   # <- ACA private IP
+# }
 
-resource "azurerm_private_dns_a_record" "sql2_to_aca" {
-  name                = azurerm_mssql_server.sql_server_2.name
-  zone_name           = azurerm_private_dns_zone.dbx_override.name
-  resource_group_name = data.azurerm_resource_group.rg.name
-  ttl                 = 30
-  records             = ["10.2.5.4"]                   # <- ACA private IP
-}
+# resource "azurerm_private_dns_a_record" "sql2_to_aca" {
+#   name                = azurerm_mssql_server.sql_server_2.name
+#   zone_name           = azurerm_private_dns_zone.dbx_override.name
+#   resource_group_name = data.azurerm_resource_group.rg.name
+#   ttl                 = 30
+#   records             = ["10.2.5.4"]                   # <- ACA private IP
+# }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "dbx_override_link" {
-  name                  = "dbx-database-windows-net-link"
-  resource_group_name   = data.azurerm_resource_group.rg.name
-  private_dns_zone_name = azurerm_private_dns_zone.dbx_override.name
-  virtual_network_id    = module.databricks1.vnet_id
-  registration_enabled  = false
-}
+# resource "azurerm_private_dns_zone_virtual_network_link" "dbx_override_link" {
+#   name                  = "dbx-database-windows-net-link"
+#   resource_group_name   = data.azurerm_resource_group.rg.name
+#   private_dns_zone_name = azurerm_private_dns_zone.dbx_override.name
+#   virtual_network_id    = module.databricks1.vnet_id
+#   registration_enabled  = false
+# }
 
