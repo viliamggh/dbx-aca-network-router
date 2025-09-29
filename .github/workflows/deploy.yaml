@@ -177,7 +177,7 @@ jobs:
             environmentId: __ACA_ENV_ID__
             configuration:
               ingress:
-                external: false
+                external: true
                 transport: tcp
                 targetPort: 5433
                 exposedPort: 5433
