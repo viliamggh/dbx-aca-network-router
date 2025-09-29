@@ -43,27 +43,6 @@ resource "azurerm_container_app" "aca" {
         value = azurerm_user_assigned_identity.c_app_identity.tenant_id
       }
 
-      # SQL Server connection configuration
-      env {
-        name  = "SQL_SERVER_1_HOSTNAME"
-        value = azurerm_mssql_server.sql_server_1.fully_qualified_domain_name
-      }
-
-      env {
-        name  = "SQL_SERVER_2_HOSTNAME" 
-        value = azurerm_mssql_server.sql_server_2.fully_qualified_domain_name
-      }
-
-      env {
-        name  = "SQL_DATABASE_1_NAME"
-        value = azurerm_mssql_database.database_1.name
-      }
-
-      env {
-        name  = "SQL_DATABASE_2_NAME"
-        value = azurerm_mssql_database.database_2.name
-      }
-
       env {
         name  = "SQL_ADMIN_USERNAME"
         value = var.sql_admin_username
