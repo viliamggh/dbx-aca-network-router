@@ -184,7 +184,7 @@ jobs:
                 additionalPortMappings:
                   - targetPort: 5434
                     exposedPort: 5434
-                    external: false
+                    external: true
             template:
               containers:
                 - name: nginx
@@ -210,5 +210,3 @@ jobs:
             --resource-group "${{ vars.RG_NAME }}" \
             --name "$ACA_NAME" \
             --yaml app.yaml
-
-          echo "ACA updated. Ingress should now show ports 5433 and 5434."
