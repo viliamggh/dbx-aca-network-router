@@ -185,8 +185,6 @@ jobs:
                   - targetPort: 5434
                     exposedPort: 5434
                     external: false
-              registries:
-                - server: __ACR_NAME__.azurecr.io
             template:
               revisionSuffix: v1
               containers:
@@ -196,6 +194,7 @@ jobs:
                     cpu: 0.25
                     memory: 0.5Gi
           YAML
+
 
           # Substitute placeholders
           sed -i "s|__ACA_NAME__|$ACA_NAME|g" app.yaml
