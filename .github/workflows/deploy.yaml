@@ -172,7 +172,6 @@ jobs:
           set -e
 
           # Get the Container Apps Environment resource ID
-          ENV_ID=$(az containerapp env show -g "$RG" -n "$ACA_ENV_NAME" --query id -o tsv)
 
           # Generate YAML with additional TCP ports 5433/5434 (ports must be unique across the env)
           cat > app.yaml <<'YAML'
@@ -180,7 +179,7 @@ jobs:
           name: __ACA_NAME__
           location: __REGION__
           properties:
-            environmentId: __ENV_ID__
+            environmentId: __ACA_ENV_ID__
             configuration:
               ingress:
                 external: false
@@ -208,7 +207,7 @@ jobs:
           # Substitute placeholders
           sed -i "s|__ACA_NAME__|$ACA_NAME|g" app.yaml
           sed -i "s|__REGION__|$REGION|g" app.yaml
-          sed -i "s|__ENV_ID__|$ENV_ID|g" app.yaml
+          sed -i "s|__ACA_ENV_ID__|$__ACA_ENV_ID__|g" app.yaml
           sed -i "s|__ACR__|$ACR|g" app.yaml
           sed -i "s|__IMAGE_TAG__|$IMAGE_TAG|g" app.yaml
 
@@ -217,7 +216,7 @@ jobs:
 
           # Update existing Container App with the new ports + image
           az containerapp update \
-            --resource-group "$RG" \
+            --resource-group "${{ vars.RG_NAME }}" \
             --name "$ACA_NAME" \
             --yaml app.yaml
 
