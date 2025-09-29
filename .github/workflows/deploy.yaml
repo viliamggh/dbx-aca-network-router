@@ -140,23 +140,34 @@ jobs:
             -var "image_name=app" \
             -var "image_tag=${{ needs.build-image.outputs.src_hash }}"
 
-      - name: Capture Terraform outputs -> step outputs
-        id: tfout
+      # - name: Capture Terraform outputs -> step outputs
+      #   id: tfout
+      #   working-directory: terraform
+      #   run: |
+      #     echo "aca_name=$(terraform output -raw container_app_name)" >> $GITHUB_OUTPUT
+      #     echo "aca_region=$(terraform output -raw container_app_region)" >> $GITHUB_OUTPUT
+      #     echo "aca_env_id=$(terraform output -raw container_app_environment_id)" >> $GITHUB_OUTPUT
+      #     echo "acr_name=$(terraform output -raw container_registry_name)" >> $GITHUB_OUTPUT
+
+      - name: Export outputs to environment (optional)
         working-directory: terraform
         run: |
-          echo "aca_name=$(terraform output -raw container_app_name)" >> $GITHUB_OUTPUT
-          echo "aca_region=$(terraform output -raw container_app_region)" >> $GITHUB_OUTPUT
-          echo "aca_env_id=$(terraform output -raw container_app_environment_id)" >> $GITHUB_OUTPUT
-          echo "acr_name=$(terraform output -raw container_registry_name)" >> $GITHUB_OUTPUT
+          echo "ACA_NAME=$(terraform output -raw container_app_name)" >> $GITHUB_ENV
+          echo "ACA_ENV_ID=$(terraform output -raw container_app_region)" >> $GITHUB_ENV
+          echo "ACA_REGION=$(terraform output -raw container_app_environment_id)" >> $GITHUB_ENV
+          echo "ACR_NAME=$(terraform output -raw container_registry_name)" >> $GITHUB_ENV
+
+      - run:
+          echo ${{ env.ACA_NAME }}
       
       - name: Update Container App (add extra TCP ports + new image)
-        env:
-          RG: ${{ vars.RG_NAME }}
-          ACA_NAME: ${{ vars.ACA_NAME }}
-          ACA_ENV_NAME: ${{ vars.ACA_ENV_NAME }}
-          ACR: ${{ vars.ACR_NAME }}
-          IMAGE_TAG: ${{ needs.build-image.outputs.src_hash }}
-          REGION: ${{ vars.REGION }}
+        # env:
+        #   RG: ${{ vars.RG_NAME }}
+        #   ACA_NAME: ${{ vars.ACA_NAME }}
+        #   ACA_ENV_NAME: ${{ vars.ACA_ENV_NAME }}
+        #   ACR: ${{ vars.ACR_NAME }}
+        #   IMAGE_TAG: ${{ needs.build-image.outputs.src_hash }}
+        #   REGION: ${{ vars.REGION }}
         run: |
           set -e
 
