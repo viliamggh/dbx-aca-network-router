@@ -162,6 +162,7 @@ resource "azurerm_postgresql_flexible_server" "pg1" {
   name                   = "${var.project_name_no_dash}-pg1-ne"
   resource_group_name    = data.azurerm_resource_group.rg.name
   location               = "northeurope"
+  zone = 2
 
   version                = "16"
   administrator_login    = var.sql_admin_username
@@ -216,6 +217,7 @@ resource "azurerm_postgresql_flexible_server" "pg2" {
   name                   = "${var.project_name_no_dash}-pg2-ne"
   resource_group_name    = data.azurerm_resource_group.rg.name
   location               = "northeurope"
+  zone = 2
 
   version                = "16"
   administrator_login    = var.sql_admin_username
