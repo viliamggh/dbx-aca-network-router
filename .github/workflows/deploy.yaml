@@ -149,7 +149,7 @@ jobs:
 
           az containerapp update \
             --resource-group "${{ vars.RG_NAME }}" \
-            --name "$(terraform output -raw container_app_name)" \
+            --name "$(terraform -chdir=terraform output -raw container_app_name)" \
             --yaml src/app.ports.yaml
 
             
