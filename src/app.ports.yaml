@@ -1,10 +1,11 @@
 properties:
   configuration:
     ingress:
+      external: true
+      transport: tcp
+      targetPort: 5433
+      exposedPort: 5433
       additionalPortMappings:
-        - targetPort: 5433
-          exposedPort: 5433
-          external: true
         - targetPort: 5434
           exposedPort: 5434
           external: true
