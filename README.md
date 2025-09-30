@@ -123,3 +123,7 @@ url2 = f"jdbc:postgresql://{aca_fqdn}:5434/{db2_name}?sslmode=require"
 df_test = spark.read.jdbc(url=url2, table="demo.employees", properties=jdbc_props)
 df_test.show()
 ```
+
+## Architecture diagram
+
+![diagram](image.png)
