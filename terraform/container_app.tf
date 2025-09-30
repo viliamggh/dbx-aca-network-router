@@ -11,10 +11,9 @@ resource "azurerm_container_app" "aca" {
 
   ingress {
     external_enabled           = true
-    # allow_insecure_connections = true
     transport                  = "tcp"
-    target_port                = 1433
-    exposed_port               = 1433
+    target_port                = 5433
+    exposed_port               = 5433
     
     traffic_weight {
       latest_revision = true
@@ -41,16 +40,6 @@ resource "azurerm_container_app" "aca" {
       env {
         name  = "AZURE_TENANT_ID"
         value = azurerm_user_assigned_identity.c_app_identity.tenant_id
-      }
-
-      env {
-        name  = "SQL_ADMIN_USERNAME"
-        value = var.sql_admin_username
-      }
-
-      env {
-        name  = "KEY_VAULT_NAME"
-        value = azurerm_key_vault.kv.name
       }
     }
   }

@@ -29,10 +29,6 @@ data "azurerm_container_registry" "acr" {
   name                = var.acr_name
   resource_group_name = data.azurerm_resource_group.rg.name
 }
-# data "azurerm_user_assigned_identity" "cicd_principal" {
-#   name                = "name_of_user_assigned_identity"
-#   resource_group_name = "name_of_resource_group"
-# }
 
 resource "azurerm_key_vault" "kv" {
   name                        = "${var.project_name_no_dash}kv"
@@ -53,20 +49,6 @@ resource "azurerm_role_assignment" "kv_rbac_current_user" {
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
-# # Grant Container App user-assigned managed identity access to Key Vault
-# resource "azurerm_role_assignment" "kv_rbac_container_app_user" {
-#   scope                = azurerm_key_vault.kv.id
-#   role_definition_name = "Key Vault Secrets Officer"
-#   principal_id         = azurerm_user_assigned_identity.c_app_identity.principal_id
-# }
-
-# # Grant Container App system-assigned managed identity access to Key Vault
-# resource "azurerm_role_assignment" "kv_rbac_container_app_system" {
-#   scope                = azurerm_key_vault.kv.id
-#   role_definition_name = "Key Vault Secrets Officer"
-#   principal_id         = azurerm_container_app.aca.identity[0].principal_id
-# }
-
 resource "azurerm_storage_account" "sa" {
   name                            = "${var.project_name_no_dash}sa"
   location                        = data.azurerm_resource_group.rg.location
@@ -76,21 +58,6 @@ resource "azurerm_storage_account" "sa" {
   public_network_access_enabled   = true
   default_to_oauth_authentication = true
 
-  # network_rules {
-  #   // Deny all by default
-  #   default_action = "Deny"
-
-  #   // Let Azure services bypass the network restrictions
-  #   // (Logging, Metrics, AzureServices can be added if desired)
-  #   bypass = [
-  #     "AzureServices"
-  #   ]
-
-  #   # // Only allow public access from this IP address
-  #   # ip_rules = [
-  #   #   "109.81.90.2"
-  #   # ]
-  # }
 }
 
 resource "azurerm_storage_container" "data_cont" {
