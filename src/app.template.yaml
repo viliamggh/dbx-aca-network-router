@@ -1,0 +1,10 @@
+properties:
+  configuration:
+    ingress:
+      additionalPortMappings:
+        - targetPort: 5433
+          exposedPort: 5433
+          external: true
+        - targetPort: 5434
+          exposedPort: 5434
+          external: true
