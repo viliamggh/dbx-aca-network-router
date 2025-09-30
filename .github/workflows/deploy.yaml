@@ -143,17 +143,14 @@ jobs:
       - name: Update Container App (add extra TCP ports only)
         run: |
           set -e
-          # If you still want templating for ports, you can envsubst, but not required
-          # envsubst < terraform/app.tmpl.yaml > app.yaml || cp terraform/app.tmpl.yaml app.yaml
-          cp terraform/app.tmpl.yaml app.yaml
 
           echo "===== Rendered app.yaml ====="
-          cat app.yaml
+          cat src/app.ports.yaml
 
           az containerapp update \
             --resource-group "${{ vars.RG_NAME }}" \
-            --name "$ACA_NAME" \
-            --yaml app.yaml
+            --name "$(terraform output -raw container_app_name)" \
+            --yaml src/app.ports.yaml
 
             
 
