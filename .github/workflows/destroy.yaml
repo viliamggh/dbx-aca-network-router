@@ -1,0 +1,78 @@
+name: 'Terraform Destroy'
+
+on:
+  workflow_dispatch:
+#     inputs:
+#       tf_apply:
+#         description: 'Run Terraform apply?'
+#         required: false
+#         type: string
+#         default: "true"
+#   push:
+#     branches:
+#       - main
+#       - dev
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  UAMI_ID: ${{ vars.UAMI_ID }}
+  ARM_SUBSCRIPTION_ID: "${{ vars.SUB_ID }}"
+  ARM_TENANT_ID: "${{ vars.TENANT_ID }}"
+
+jobs:
+
+ 
+  infra-destroy:
+    environment: main
+    name: 'Az Infra Destroy'
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to Azure using Federated Credentials
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.UAMI_ID }}
+          tenant-id: ${{ vars.TENANT_ID }}
+          subscription-id: ${{ vars.SUB_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+      - name: Create runtime tfbackend.conf
+        working-directory: terraform
+        run: |
+            cat > tfbackend.conf <<EOF
+            resource_group_name  = "${{ vars.RG_NAME }}"
+            storage_account_name = "${{ vars.STORAGE_ACCOUNT_NAME }}"
+            container_name       = "${{ vars.CONTAINER_NAME }}"
+            key                  = "terraform.tfstate"
+            EOF
+        
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init -backend-config=tfbackend.conf 
+
+    #   - name: Terraform Plan
+    #     working-directory: terraform
+    #     run: |
+    #         terraform plan \
+    #         -var "acr_name=${{ vars.ACR_NAME }}" \
+    #         -var "rg_name=${{ vars.RG_NAME }}" \
+    #         -var "project_name_no_dash=${{ vars.PROJECT_NAME_NODASH }}" \
+    #         -var "image_name=app" \
+    #         -var "image_tag=${{ needs.build-image.outputs.src_hash }}"
+
+        # Terraform Apply
+      - name: Terraform Apply
+        working-directory: terraform
+        run: |
+            terraform destroy -auto-approve 
