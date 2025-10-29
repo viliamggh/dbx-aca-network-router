@@ -61,18 +61,23 @@ jobs:
         working-directory: terraform
         run: terraform init -backend-config=tfbackend.conf 
 
-    #   - name: Terraform Plan
-    #     working-directory: terraform
-    #     run: |
-    #         terraform plan \
-    #         -var "acr_name=${{ vars.ACR_NAME }}" \
-    #         -var "rg_name=${{ vars.RG_NAME }}" \
-    #         -var "project_name_no_dash=${{ vars.PROJECT_NAME_NODASH }}" \
-    #         -var "image_name=app" \
-    #         -var "image_tag=${{ needs.build-image.outputs.src_hash }}"
-
-        # Terraform Apply
-      - name: Terraform Apply
+      - name: Terraform Plan
         working-directory: terraform
         run: |
-            terraform destroy -auto-approve 
+            terraform plan -destroy \
+            -var "acr_name=${{ vars.ACR_NAME }}" \
+            -var "rg_name=${{ vars.RG_NAME }}" \
+            -var "project_name_no_dash=${{ vars.PROJECT_NAME_NODASH }}" \
+            -var "image_name=app" \
+            -var "image_tag=destroy"
+
+        # Terraform Apply
+      - name: Terraform Destroy
+        working-directory: terraform
+        run: |
+            terraform destroy -auto-approve \
+            -var "acr_name=${{ vars.ACR_NAME }}" \
+            -var "rg_name=${{ vars.RG_NAME }}" \
+            -var "project_name_no_dash=${{ vars.PROJECT_NAME_NODASH }}" \
+            -var "image_name=app" \
+            -var "image_tag=destroy" 
